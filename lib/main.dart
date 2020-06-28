@@ -33,15 +33,21 @@ class CounterPage extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(title: Text('Counter')),
-      body: BlocBuilder<CounterBloc, Counter>(
-        bloc: counterBloc, //Not necessary because an instance of CounterBloc is accessible from parent widgets.
-        condition: (prevState, state) => prevState.value != state.value, // Not necessary in our case, this is the default behavior
-        builder: (context, count) {
-          return Center(
-            child: Text('${count.value}', style: TextStyle(fontSize: 24.0),),
-          );
-        },
-      ),
+      body: BlocConsumer<CounterBloc, Counter>(
+          bloc: counterBloc,
+          //Not necessary because an instance of CounterBloc is accessible from parent widgets.
+          //condition: (prevState, state) => prevState.value != state.value, // Not necessary in our case, this is the default behavior
+          builder: (context, count) {
+            return Center(
+              child: Text(
+                '${count.value}',
+                style: TextStyle(fontSize: 24.0),
+              ),
+            );
+          },
+          listener: (context, count) {
+            print("Listen and React");
+          }),
       floatingActionButton: Column(
         crossAxisAlignment: CrossAxisAlignment.end,
         mainAxisAlignment: MainAxisAlignment.end,
@@ -56,14 +62,13 @@ class CounterPage extends StatelessWidget {
             ),
           ),
           Padding(
-            padding: EdgeInsets.symmetric(vertical: 5.0),
-            child: FloatingActionButton(
-              child: Icon(Icons.remove),
-              onPressed: () {
-                counterBloc.add(DecrementCounter());
-              },
-            )
-          ),
+              padding: EdgeInsets.symmetric(vertical: 5.0),
+              child: FloatingActionButton(
+                child: Icon(Icons.remove),
+                onPressed: () {
+                  counterBloc.add(DecrementCounter());
+                },
+              )),
         ],
       ),
     );
